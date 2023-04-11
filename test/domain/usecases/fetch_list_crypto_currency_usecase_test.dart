@@ -47,7 +47,7 @@ void main() {
   });
 
   test('should return a list of crypto currency entities', () async {
-    final result = await useCase();
+    final result = useCase();
 
     expect(result, cryptoList);
 

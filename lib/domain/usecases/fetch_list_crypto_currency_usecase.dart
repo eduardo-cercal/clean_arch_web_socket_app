@@ -6,6 +6,6 @@ class FetchListCryptoCurrencyUseCase {
 
   FetchListCryptoCurrencyUseCase(this.repository);
 
-  Future<List<CryptoCurrencyEntity>> call() async =>
+  Stream<List<CryptoCurrencyEntity>> call() =>
       repository.fetchListCryptoCurrency();
 }
