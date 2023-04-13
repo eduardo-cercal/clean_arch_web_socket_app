@@ -5,13 +5,13 @@ import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockCryptoCureencyRepository extends Mock
+class MockCryptoCurrencyRepository extends Mock
     implements CryptoCurrencyRepository {}
 
 void main() {
   late CryptoCurrencyRepository repository;
   late FetchListCryptoCurrencyUseCase useCase;
-  late List<CryptoCurrencyEntity> cryptoList;
+  late List<CryptoCurrencyEntity> validData;
 
   List<CryptoCurrencyEntity> mockValidData() => [
         CryptoCurrencyEntity(
@@ -25,31 +25,33 @@ void main() {
         CryptoCurrencyEntity(
           id: faker.randomGenerator.integer(10),
           name: faker.person.name(),
-          imagePath: faker.internet.httpUrl(),
           sortIndex: faker.randomGenerator.integer(10),
           lastTrade: faker.randomGenerator.integer(10),
           volume: faker.randomGenerator.decimal(),
           change: faker.randomGenerator.decimal(),
+          imagePath: faker.internet.httpUrl(),
         ),
       ];
 
-  When mockFetchListCryptoCurrencyCall() =>
+  When mockCryptoCurrencyRepositoryCall() =>
       when(() => repository.fetchListCryptoCurrency());
 
-  void mockFetchListCryptoCurrency() =>
-      mockFetchListCryptoCurrencyCall().thenAnswer((_) async => cryptoList);
+  void mockCryptoCurrencyRepository() =>
+      mockCryptoCurrencyRepositoryCall().thenAnswer((_) async => validData);
 
   setUp(() {
-    repository = MockCryptoCureencyRepository();
+    repository = MockCryptoCurrencyRepository();
     useCase = FetchListCryptoCurrencyUseCase(repository);
-    cryptoList = mockValidData();
-    mockFetchListCryptoCurrency();
+    validData = mockValidData();
+    mockCryptoCurrencyRepository();
   });
 
-  test('should return a list of crypto currency entities', () async {
-    final result = useCase();
+  test('should validate currect execution', () async {
+    final stream = await useCase();
 
-    expect(result, cryptoList);
+    stream.listen((list) {
+      expect(list, validData);
+    });
 
     verify(() => repository.fetchListCryptoCurrency()).called(1);
   });

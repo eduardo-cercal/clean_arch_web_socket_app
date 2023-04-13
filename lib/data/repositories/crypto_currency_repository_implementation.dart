@@ -9,11 +9,6 @@ class CryptoCurrencyRepositoryImplementation
   CryptoCurrencyRepositoryImplementation(this.dataSource);
 
   @override
-  Stream<List<CryptoCurrencyEntity>> fetchListCryptoCurrency() {
-    try {
-      return dataSource.fetchListCryptoCurrency();
-    } catch (e) {
-      throw Exception();
-    }
-  }
+  Future<List<CryptoCurrencyEntity>> fetchListCryptoCurrency() async =>
+      await dataSource.fetchListCryptoCurrency();
 }
